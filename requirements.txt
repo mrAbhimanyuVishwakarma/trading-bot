@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+alpaca-trade-api
+transformers
+torch
+newsapi-python
+python-dotenv
