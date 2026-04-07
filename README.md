@@ -2,6 +2,11 @@
 
 Python trading bot using TradingView signals + news sentiment (FinBERT) + Alpaca execution.
 
+## Guide for noncoders
+If you are not a developer, start with the user guide:
+
+- [NONCODER_GUIDE.md](NONCODER_GUIDE.md)
+
 ## Stack
 - **TradingView** — Pine Script alerts → webhook
 - **FastAPI** — receives webhook, serves health endpoint
@@ -10,6 +15,13 @@ Python trading bot using TradingView signals + news sentiment (FinBERT) + Alpaca
 - **SQLite** — local trade log
 
 ## Setup
+
+### Quick start (noncoders)
+1. Copy `.env.example` to `.env` and fill in your API keys
+2. Double-click `start.bat` to run the bot
+3. Double-click `test.bat` to run a sample backtest
+
+### Manual setup (developers)
 
 ```bash
 # 1. Clone / open in VS Code
@@ -58,6 +70,13 @@ Copy the https URL into TradingView webhook field.
 | Alpaca (paper) | https://alpaca.markets |
 | NewsAPI | https://newsapi.org |
 
+## Backtest demo
+Run the backtest locally to verify the decision logic without placing live orders:
+
+```bash
+python backtest.py
+```
+
 ## File structure
 ```
 main.py                    # Entry point
@@ -77,3 +96,4 @@ execution/
 logger/
   trade_log.py             # SQLite trade history
 ```
+
