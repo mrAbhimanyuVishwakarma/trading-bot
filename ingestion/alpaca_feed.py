@@ -3,6 +3,7 @@ ingestion/alpaca_feed.py
 WebSocket stream for real-time prices from Alpaca.
 """
 
+import asyncio
 import alpaca_trade_api as tradeapi
 from config import ALPACA_API_KEY, ALPACA_SECRET_KEY, ALPACA_BASE_URL, SYMBOLS
 import logging
@@ -21,21 +22,20 @@ async def start_price_stream():
     """Background task: keeps latest_prices updated via Alpaca WebSocket."""
     try:
         api = tradeapi.REST(ALPACA_API_KEY, ALPACA_SECRET_KEY, ALPACA_BASE_URL)
-        conn = tradeapi.stream2.StreamConn(
+        conn = tradeapi.Stream(
             ALPACA_API_KEY,
             ALPACA_SECRET_KEY,
             base_url=ALPACA_BASE_URL,
         )
 
-        @conn.on(r"^AM\.")     # per-minute bar updates
-        async def on_bar(conn, channel, bar):
+        @conn.on_bar(*SYMBOLS)
+        async def on_bar(bar):
             symbol = bar.symbol
             latest_prices[symbol] = float(bar.close)
             logger.debug(f"Price update: {symbol} = {bar.close}")
 
-        channels = [f"AM.{s}" for s in SYMBOLS]
         logger.info(f"📶 Starting Alpaca price stream for {SYMBOLS}")
-        conn.run(channels)
+        await asyncio.to_thread(conn.run)
 
     except Exception as e:
         logger.error(f"Price stream error: {e}")
